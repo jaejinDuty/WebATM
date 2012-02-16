@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+        <!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.tc.webatm.model.User" table="user">
+        <meta attribute="class-description">Class, representing users in DB</meta>
+        <id name="id" type="integer" column="id">
+            <generator class="native" />
+        </id>
+        <property name="email" type="text" length="100" not-null="true" column="email" />
+        <property name="password" type="text" length="100" not-null="true" column="password" />
+        <set name="accounts" table="account" inverse="true" fetch="select" lazy="true">
+            <key column="user_id" />
+            <one-to-many class="com.tc.webatm.model.Account" />
+        </set>
+    </class>
+</hibernate-mapping>

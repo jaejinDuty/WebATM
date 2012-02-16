@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.tc.webatm.model.Account" table="account">
+        <meta attribute="class-description">Class, representing accounts in DB</meta>
+        <id name="id" type="integer" column="id">
+            <generator class="native" />
+        </id>
+        <!-- <property name="userId" type="integer" not-null="true" column="user_id" /> -->
+        <property name="currencyId" type="integer" not-null="true" column="currency_id" />
+        <property name="state" type="integer" column="state" />
+        <property name="balance" type="integer" column="balance" />
+        <property name="title" type="text" column="title" />
+
+        <many-to-one name="user" fetch="select" class="com.tc.webatm.model.User">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>
