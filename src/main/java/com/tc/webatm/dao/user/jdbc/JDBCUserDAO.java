@@ -36,11 +36,16 @@ public class JDBCUserDAO implements UserDAO {
     }
 
     @Override
-    public void update(@NotNull User user) throws ClassNotFoundException, SQLException {
+    public void save(@NotNull User user) throws ClassNotFoundException, SQLException {
         if (user.getId() < 1) {
             throw new IllegalArgumentException("User id must represent positive int");
         }
         jdbcTemplate.update("update user set email = ?, password = ? where id = ?;", new Object[] {user.getEmail(), user.getPassword(), user.getId()});
+    }
+
+    @Override
+    public void update(@NotNull User user) throws ClassNotFoundException, SQLException {
+        save(user);
     }
 
     @Override

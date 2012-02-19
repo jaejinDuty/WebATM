@@ -4,10 +4,6 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="userService" class="com.tc.webatm.service.UserService" autowire="byType" />
-    <bean id="userDAO" class="com.tc.webatm.dao.user.hibernate.HibernateUserDAO" autowire="byName"/>
-    <!-- <bean id="userDAO" class="com.tc.webatm.dao.user.jdbc.JDBCUserDAO" autowire="byName"/> -->
-
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
           p:location="classpath:config/jdbc.properties" />
@@ -21,7 +17,8 @@
           p:password="${jdbc.password}" />
 
     <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+          class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
+          scope="singleton">
         <property name="dataSource" ref="dataSource" />
         <!-- <property name="configLocation">
             <value>classpath:config/hibernate.cfg.xml</value>
@@ -30,6 +27,7 @@
             <props>
                 <prop key="hibernate.dialect">${jdbc.dialect}</prop>
                 <prop key="hibernate.show_sql">true</prop>
+                <!-- <prop key="hibernate.format_sql">true</prop> -->
             </props>
         </property>
         <property name="mappingLocations">
@@ -40,8 +38,34 @@
         </property>
     </bean>
 
-    <bean id="transactionManager"
-          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+
+
+<!-- my beans -->
+    <bean id="userService" class="com.tc.webatm.service.UserService" autowire="byType" />
+    <bean id="userDAO" class="com.tc.webatm.dao.user.hibernate.HibernateUserDAO" autowire="byName"/>
+    <!-- <bean id="userDAO" class="com.tc.webatm.dao.user.jdbc.JDBCUserDAO" autowire="byName"/> -->
+
+    <bean id="hibernateProxyAspect" class="com.tc.webatm.db.hibernate.HibernateProxyAspect">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+<!--
+    <bean id="hibernateProxy" class="com.tc.webatm.db.hibernate.HibernateProxyDeprecated" />
+    <bean id="hibernateProxyDeprecated" class="com.tc.webatm.db.hibernate.HibernateProxyDeprecated" />
+
+    <bean id="userDAOProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+        available only for hibernate impl of userDAO
+        <property name="target" ref="userDAO" />
+
+        <property name="interceptorNames">
+            <list>
+                <value>hibernateProxyDeprecated</value>
+            </list>
+        </property>
+    </bean>
+-->
 </beans>

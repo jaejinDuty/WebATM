@@ -5,8 +5,9 @@
 <hibernate-mapping>
     <class name="com.tc.webatm.model.Account" table="account">
         <meta attribute="class-description">Class, representing accounts in DB</meta>
-        <id name="id" type="integer" column="id">
-            <generator class="native" />
+        <id name="id" type="integer">
+            <column name="id" />
+            <generator class="identity" />
         </id>
         <!-- <property name="userId" type="integer" not-null="true" column="user_id" /> -->
         <property name="currencyId" type="integer" not-null="true" column="currency_id" />

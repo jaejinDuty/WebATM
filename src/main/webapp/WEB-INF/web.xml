@@ -5,7 +5,8 @@
 
 	<display-name>Spring Web MVC Application</display-name>
 
-	<servlet>
+    <!-- Spring dispatcher servlet. Some kind of front controller -->
+    <servlet>
 		<servlet-name>web-dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -17,7 +18,29 @@
 	</servlet-mapping>
 
 
-    <!-- setting default servlet for static content -->
+    <!-- Spring listener -->
+    <listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+    <!-- Context config -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/web-dispatcher-servlet.xml</param-value>
+    </context-param>
+
+    <!-- Spring security -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Default servlet for static content -->
     <!-- todo: clarify with Igor how regexps can be used here-->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
@@ -25,23 +48,15 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
+        <url-pattern>*.js</url-pattern>
     </servlet-mapping>
 
-
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/web-dispatcher-servlet.xml</param-value>
-	</context-param>
-
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-
+    <!-- Index scripts -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- Error pages -->
     <error-page>
         <error-code>403</error-code>
         <location>/WEB-INF/jsp/pages/403.jsp</location>

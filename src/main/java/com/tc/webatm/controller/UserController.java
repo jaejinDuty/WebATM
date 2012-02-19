@@ -4,8 +4,12 @@ import com.tc.webatm.URIs;
 import com.tc.webatm.model.User;
 import com.tc.webatm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
@@ -23,7 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(URIs.USERS_HOME)
+    @RequestMapping(URIs.User.HOME)
     public ModelAndView index() {
         ModelAndView model = new ModelAndView("user/index");
         try {
@@ -41,7 +45,8 @@ public class UserController {
         return model;
 	}
 
-    @RequestMapping(value=URIs.USER_EDIT, method = RequestMethod.GET)
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value=URIs.User.EDIT, method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable("id") Integer id) {
         ModelAndView model = new ModelAndView("user/edit");
         if (id != null) {
@@ -54,7 +59,8 @@ public class UserController {
         return model;
     }
 
-    @RequestMapping(value=URIs.USER_DELETE, method = RequestMethod.GET)
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value=URIs.User.DELETE, method = RequestMethod.GET)
     public ModelAndView delete(@PathVariable("id") Integer id) {
         String resultMessage = "User was successfully removed";
         try {
@@ -67,14 +73,16 @@ public class UserController {
         return model;
     }
 
-    @RequestMapping(value=URIs.USER_ADD, method = RequestMethod.GET)
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value=URIs.User.ADD, method = RequestMethod.GET)
     public ModelAndView add() {
         ModelAndView model = new ModelAndView("user/edit");
         model.addObject("user", new User());
         return model;
     }
 
-    @RequestMapping(value=URIs.USER_SAVE, method = RequestMethod.POST)
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(value=URIs.User.SAVE, method = RequestMethod.POST)
     public ModelAndView save(User user) {
         String resultMessage = "User was successfully ";
         try {
@@ -82,7 +90,7 @@ public class UserController {
                 userService.add(user);
                 resultMessage += "added";
             } else {
-                userService.update(user);
+                userService.save(user);
                 resultMessage += "updated";
             }
         } catch (Exception e) {

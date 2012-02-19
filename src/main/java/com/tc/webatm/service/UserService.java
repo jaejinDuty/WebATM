@@ -1,7 +1,6 @@
 package com.tc.webatm.service;
 
 import com.tc.webatm.dao.user.UserDAO;
-import com.tc.webatm.model.Account;
 import com.tc.webatm.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -64,6 +62,10 @@ public class UserService {
         userDAO.delete(id);
     }
     
+    public void save(User user) throws ClassNotFoundException, SQLException {
+        userDAO.save(user);
+    }
+
     public void update(User user) throws ClassNotFoundException, SQLException {
         userDAO.update(user);
     }

@@ -2,6 +2,7 @@ package com.tc.webatm.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.tc.webatm.URIs;
 import org.springframework.stereotype.Controller;
@@ -19,4 +20,13 @@ public class IndexController {
 
         return model;
 	}
+
+    /* @RequestMapping(URIs.LOGOUT)
+    public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        request.getSession().invalidate();
+        HttpSession s = request.getSession();
+
+        return "redirect:/";
+    } */
 }

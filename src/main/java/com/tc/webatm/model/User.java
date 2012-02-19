@@ -7,7 +7,7 @@ import java.util.Set;
 
 //@Entity
 //@Table(name="user")
-public class User {
+public class User implements java.io.Serializable {
     /*@Id
     @Column(name="id")
     @GeneratedValue*/

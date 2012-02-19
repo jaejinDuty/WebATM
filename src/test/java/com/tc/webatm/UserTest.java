@@ -55,14 +55,14 @@ public class UserTest {
         User targetUser = ((User)userService.fetchAll().toArray()[0]);
 
         targetUser.setEmail(changedMail);
-        userService.update(targetUser);
+        userService.save(targetUser);
 
         Collection users = userService.fetchAll();
         targetUser = ((User)users.toArray()[0]);
         assertEquals(targetUser.getEmail(), changedMail);
 
         targetUser.setEmail(initialEmail);
-        userService.update(targetUser);
+        userService.save(targetUser);
     }
 
     @Test
@@ -73,26 +73,27 @@ public class UserTest {
 
     @Test
     public void testAccounts() throws ClassNotFoundException, SQLException {
-        int uid = 123455678;
-        try {
-            userService.delete(uid);
-        } catch (Exception e) {
-            //ignore
-        }
-
-        Set<Account> accounts = new HashSet<Account>();
-        accounts.add(new Account().setBalance(10).setCurrencyId(1).setState(1).setTitle("usd").setUserId(uid));
-
         User targetUser = new User();
-        targetUser.setId(uid).setEmail("user1234545@test.com").setPassword("dsfsd").setAccounts(accounts);
+        targetUser.setEmail("user1234545@test.com").setPassword("dsfsd");
         
         userService.add(targetUser);
+        int uid = targetUser.getId();
+
+        Set<Account> accounts = new HashSet<Account>();
+        Account account = new Account().setBalance(10) .
+                                        setCurrencyId(1) .
+                                        setState(1) .
+                                        setTitle("grn") .
+                                        setUser(targetUser);
+        accounts.add(account);
+        targetUser.setAccounts(accounts);
+        userService.save(targetUser);
 
         User u = userService.get(uid);
         assertNotSame(u.getAccounts().size(), 0);
         
-        for (Account account : u.getAccounts()) {
-            System.out.println(account.toString());
+        for (Account acc : u.getAccounts()) {
+            System.out.println(acc.toString());
         }
     }
 }

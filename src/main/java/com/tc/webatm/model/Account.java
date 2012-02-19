@@ -1,8 +1,6 @@
 package com.tc.webatm.model;
 
-import com.tc.webatm.service.UserService;
-
-public class Account {
+public class Account implements java.io.Serializable {
     private int id;
     private int userId;
     private int currencyId;
