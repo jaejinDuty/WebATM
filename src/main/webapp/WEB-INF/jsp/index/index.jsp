@@ -6,7 +6,7 @@
     <jsp:param name="header" value="Welcome!" />
 </jsp:include>
 
-<h2>Hello dear ATM user!</h2>
+<h2>Hey there, ${username}!</h2>
 Please use menu to navigate through the site
 
 <jsp:include page="/WEB-INF/jsp/elements/footer.jsp" />

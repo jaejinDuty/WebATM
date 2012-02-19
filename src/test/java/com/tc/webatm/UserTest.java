@@ -14,9 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:test-context.xml"})
@@ -35,7 +33,7 @@ public class UserTest {
         assertNotSame(oldSize, users.size());
 
         int lastUId = 0;
-        System.out.println("Users:");
+        System.out.println("users:");
         for (Object user : users) {
             System.out.println(user);
             lastUId = ((User) user).getId();
@@ -76,25 +74,39 @@ public class UserTest {
 
     @Test
     public void testAccounts() throws ClassNotFoundException, SQLException {
-        User targetUser = new User();
-        targetUser.setEmail("user1234545@test.com").setPassword("dsfsd");
+        User targetUser = new User().setEmail("user1234545@test.com").setPassword("dsfsd");
         
-        Account account = new Account().setBalance(10) .
-                                        setCurrencyId(1) .
-                                        setState(1) .
-                                        setTitle("grn") .
-                                        setUser(targetUser);
-        targetUser.getAccounts().add(account);
+        targetUser.getAccounts().add(new Account().setBalance(10) .
+                                                    setCurrencyId(1) .
+                                                    setState(1) .
+                                                    setTitle("grn") .
+                                                    setUser(targetUser));
         userService.save(targetUser);
 
         int uid = targetUser.getId();
 
-        User u = userService.get(uid);
-        assertNotSame(u.getAccounts().size(), 0);
-        
-        for (Account acc : u.getAccounts()) {
+        targetUser = userService.get(uid);
+        assertSame(targetUser.getAccounts().size(), 1);
+
+        System.out.println("user:");
+        System.out.println(targetUser.toString());
+
+        System.out.println("user accounts:");
+        for (Account acc : targetUser.getAccounts()) {
             System.out.println(acc.toString());
         }
+        
+        Account targetAccount = (Account)targetUser.getAccounts().toArray()[0];
+        int min=5, max=10;
+        int rndNum = min + (int)(Math.random() * ((max - min) + 1));
+        String newAccTitle = "title" + rndNum;
+        targetAccount.setTitle(newAccTitle);
+
+        userService.save(targetUser);
+
+        targetUser = userService.get(uid);
+        targetAccount = ((Account)targetUser.getAccounts().toArray()[0]);
+        assertTrue(targetAccount.getTitle().equals(newAccTitle));
 
         userService.delete(uid);
     }

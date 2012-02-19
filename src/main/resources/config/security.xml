@@ -34,8 +34,23 @@
 
     <security:global-method-security secured-annotations="enabled" />
 
-    <security:http auto-config="true">
-        <security:intercept-url pattern="/**" access="ROLE_USER" />
+<!--
+    <security:http auto-config="true" use-expressions="true" access-denied-page="/jsp/pages/403.jsp">
+        <security:intercept-url pattern="/img/**" filters="none" />
+        <security:intercept-url pattern="/**" access="isAuthenticated()" />
+        <security:logout logout-url="/logout" invalidate-session="true" logout-success-url="/" />
+        <security:http-basic />
+    </security:http>
+-->
+    <security:http auto-config="true" access-denied-page="/jsp/pages/403.jsp">
+        <security:intercept-url pattern="/index/*" access="ROLE_USER" />
+        <security:intercept-url pattern="/*" access="ROLE_USER" />
+        <security:intercept-url pattern="/users" access="ROLE_USER"  />
+        <security:intercept-url pattern="/user/accounts/*" access="ROLE_USER"  />
+        <security:intercept-url pattern="/user/edit/*" access="ROLE_ADMIN"  />
+        <security:intercept-url pattern="/user/delete/*" access="ROLE_ADMIN"  />
+        <security:intercept-url pattern="/user/add" access="ROLE_ADMIN"  />
+        <security:intercept-url pattern="/user/save" access="ROLE_ADMIN"  />
         <security:intercept-url pattern="/img/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <security:logout logout-url="/logout" invalidate-session="true" logout-success-url="/" />
         <security:http-basic />
@@ -45,7 +60,7 @@
         <security:authentication-provider>
             <security:user-service>
                 <security:user name="admin" password="54321" authorities="ROLE_USER,ROLE_ADMIN" />
-                <security:user name="igor" password="qwerty" authorities="ROLE_USER,ROLE_ADMIN" />
+                <security:user name="Igor" password="qwerty" authorities="ROLE_USER,ROLE_ADMIN" />
                 <security:user name="guest" password="guest" authorities="ROLE_USER" />
             </security:user-service>
         </security:authentication-provider>

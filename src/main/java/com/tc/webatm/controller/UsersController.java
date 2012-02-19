@@ -14,24 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 
-/*
-* use
-* http://levelup.lishman.com/spring/form-processing/quick-start.php
-*
-* */
-
 @Controller
 @SessionAttributes("user")
-public class UserController {
+public class UsersController {
 
     @Autowired
     private UserService userService;
 
-    @RequestMapping(URIs.User.HOME)
+    @RequestMapping(URIs.User.LIST)
     public ModelAndView index() {
         ModelAndView model = new ModelAndView("user/index");
         try {
-            //request.setAttribute("users", getUserDAO().getAll());
             Collection users = userService.fetchAll();
             if (users.isEmpty()) {
                 model.addObject("msg", "No users found");
@@ -45,7 +38,6 @@ public class UserController {
         return model;
 	}
 
-    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value=URIs.User.EDIT, method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable("id") Integer id) {
         ModelAndView model = new ModelAndView("user/edit");
@@ -59,7 +51,6 @@ public class UserController {
         return model;
     }
 
-    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value=URIs.User.DELETE, method = RequestMethod.GET)
     public ModelAndView delete(@PathVariable("id") Integer id) {
         String resultMessage = "User was successfully removed";
@@ -73,7 +64,6 @@ public class UserController {
         return model;
     }
 
-    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value=URIs.User.ADD, method = RequestMethod.GET)
     public ModelAndView add() {
         ModelAndView model = new ModelAndView("user/edit");
@@ -81,7 +71,6 @@ public class UserController {
         return model;
     }
 
-    @Secured({"ROLE_ADMIN"})
     @RequestMapping(value=URIs.User.SAVE, method = RequestMethod.POST)
     public ModelAndView save(User user) {
         String resultMessage = "User was successfully ";
