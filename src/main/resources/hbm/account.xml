@@ -9,7 +9,6 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <!-- <property name="userId" type="integer" not-null="true" column="user_id" /> -->
         <property name="currencyId" type="integer" not-null="true" column="currency_id" />
         <property name="state" type="integer" column="state" />
         <property name="balance" type="integer" column="balance" />

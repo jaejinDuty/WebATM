@@ -35,9 +35,9 @@ public class HibernateUserDAO implements UserDAO {
     public Collection<User> getAll() {
         //!!opened and closed in HibernateProxyAspect
         //Session session = sessionFactory.openSession();
-        List users = SessionProvider.SELF.getSession().createCriteria(User.class).list();
-        //session.close();
-        return users;
+
+        return SessionProvider.SELF.getSession().createCriteria(User.class).list();
+        //return template().loadAll(User.class);
     }
 
     @Override

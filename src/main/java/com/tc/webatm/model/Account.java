@@ -2,7 +2,6 @@ package com.tc.webatm.model;
 
 public class Account implements java.io.Serializable {
     private int id;
-    private int userId;
     private int currencyId;
     private int state;
     private int balance;
@@ -46,15 +45,6 @@ public class Account implements java.io.Serializable {
         return this;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public Account setUserId(int userId) {
-        this.userId = userId;
-        return this;
-    }
-
     public int getCurrencyId() {
         return currencyId;
     }
@@ -91,9 +81,8 @@ public class Account implements java.io.Serializable {
         Account obj = (Account)o;
         return (obj.getId() == getId() &&
                 obj.getBalance() == getBalance() &&
-                obj.getUserId() == getUserId() &&
                 obj.getCurrencyId() == getCurrencyId() &&
                 obj.getState() == getState() &&
-                obj.getTitle() == getTitle());
+                obj.getTitle().equals(getTitle()));
     }
 }

@@ -11,7 +11,7 @@
         <property name="email" type="text" length="100" not-null="true" column="email" />
         <property name="password" type="text" length="100" not-null="true" column="password" />
 
-        <set name="accounts" table="account" inverse="true" fetch="select" lazy="true">
+        <set name="accounts" cascade="all" table="account" inverse="true" fetch="select" lazy="false">
             <key>
                 <column name="user_id" not-null="true" />
             </key>

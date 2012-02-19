@@ -53,22 +53,25 @@ public class UserTest {
         String changedMail = "user2@test.com";
 
         User targetUser = ((User)userService.fetchAll().toArray()[0]);
+        int targetUID = targetUser.getId();
 
         targetUser.setEmail(changedMail);
-        userService.save(targetUser);
+        userService.update(targetUser);
 
-        Collection users = userService.fetchAll();
-        targetUser = ((User)users.toArray()[0]);
+        targetUser = userService.get(targetUID);
         assertEquals(targetUser.getEmail(), changedMail);
 
         targetUser.setEmail(initialEmail);
-        userService.save(targetUser);
+        userService.update(targetUser);
     }
 
     @Test
     public void testFetch() throws ClassNotFoundException, SQLException {
         Collection users = userService.fetchAll();
         assertNotSame(users.size(), 0);
+        
+        User user = userService.get(1);
+        assertNotSame(user.getAccounts().size(), 0);
     }
 
     @Test
@@ -76,18 +79,15 @@ public class UserTest {
         User targetUser = new User();
         targetUser.setEmail("user1234545@test.com").setPassword("dsfsd");
         
-        userService.add(targetUser);
-        int uid = targetUser.getId();
-
-        Set<Account> accounts = new HashSet<Account>();
         Account account = new Account().setBalance(10) .
                                         setCurrencyId(1) .
                                         setState(1) .
                                         setTitle("grn") .
                                         setUser(targetUser);
-        accounts.add(account);
-        targetUser.setAccounts(accounts);
+        targetUser.getAccounts().add(account);
         userService.save(targetUser);
+
+        int uid = targetUser.getId();
 
         User u = userService.get(uid);
         assertNotSame(u.getAccounts().size(), 0);
@@ -95,5 +95,7 @@ public class UserTest {
         for (Account acc : u.getAccounts()) {
             System.out.println(acc.toString());
         }
+
+        userService.delete(uid);
     }
 }
