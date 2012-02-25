@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -18,10 +19,6 @@ public class UserService {
     
     public static final String ADMIN_EMAIL = "admin@webatm.com";
     public static final String ADMIN_PASSWORD = "admin";
-
-    public UserService() {
-        int i=0;
-    }
 
     public void setLoggedUser(User u) {
         loggedUser = u;
@@ -42,31 +39,30 @@ public class UserService {
                         .setPassword((String) map.get("password"));
     }
 
-    public Collection<User> fetchAll() throws ClassNotFoundException, SQLException {
+    public Collection<User> fetchAll() {
         return userDAO.getAll();
     }
 
-    public User get(int id) throws ClassNotFoundException, SQLException {
+    public User get(int id) {
         return userDAO.get(id);
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        userDAO.add(user);
-    }
-
-    public void delete(User user) throws ClassNotFoundException, SQLException {
-        userDAO.delete(user);
-    }
-
-    public void delete(int id) throws ClassNotFoundException, SQLException {
+    public void delete(int id) {
         userDAO.delete(id);
     }
     
-    public void save(User user) throws ClassNotFoundException, SQLException {
+    public void save(User user) {
         userDAO.save(user);
     }
 
-    public void update(User user) throws ClassNotFoundException, SQLException {
-        userDAO.update(user);
+    public Collection<User> findByEmail(String email) {
+        return findByField("email", email);
+    }
+    
+    private Collection<User> findByField(String field, String value) {
+        if (value.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return userDAO.getAll(field, value);
     }
 }

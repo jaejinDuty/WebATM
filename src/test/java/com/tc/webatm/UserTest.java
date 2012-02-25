@@ -3,6 +3,7 @@ package com.tc.webatm;
 import com.tc.webatm.model.Account;
 import com.tc.webatm.model.User;
 import com.tc.webatm.service.UserService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -22,12 +21,20 @@ public class UserTest {
     @Autowired
     private UserService userService;
 
+    private int rndNum;
+
+    @Before
+    public void setUp() {
+        int min=5, max=10;
+        rndNum = min + (int)(Math.random() * ((max - min) + 1));
+    }
+
     @Test
     public void testAddRemove() throws ClassNotFoundException, SQLException {
         Collection users = userService.fetchAll();
         int oldSize = users.size();
 
-        userService.add(new User().setId(2).setEmail("aa@bb.cc").setPassword("123"));
+        userService.save(new User().setEmail("test" + rndNum + "@mail.com").setPassword("123"));
         users = userService.fetchAll();
 
         assertNotSame(oldSize, users.size());
@@ -54,13 +61,13 @@ public class UserTest {
         int targetUID = targetUser.getId();
 
         targetUser.setEmail(changedMail);
-        userService.update(targetUser);
+        userService.save(targetUser);
 
         targetUser = userService.get(targetUID);
         assertEquals(targetUser.getEmail(), changedMail);
 
         targetUser.setEmail(initialEmail);
-        userService.update(targetUser);
+        userService.save(targetUser);
     }
 
     @Test
@@ -97,8 +104,6 @@ public class UserTest {
         }
         
         Account targetAccount = (Account)targetUser.getAccounts().toArray()[0];
-        int min=5, max=10;
-        int rndNum = min + (int)(Math.random() * ((max - min) + 1));
         String newAccTitle = "title" + rndNum;
         targetAccount.setTitle(newAccTitle);
 

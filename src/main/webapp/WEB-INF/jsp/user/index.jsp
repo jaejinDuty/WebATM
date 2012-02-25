@@ -28,7 +28,7 @@
                         <td><c:out value="${user.id}" /></td>
                         <td>${user.email}</td>
                         <td>
-                            <a href='<c:url value="/user/accounts/${user.id}" />'>accounts</a>
+                            <a href='<c:url value="/accounts/${user.id}" />'>accounts</a>
                             <sec:authorize ifAllGranted="ROLE_ADMIN">
                                 | <a href='<c:url value="/user/edit/${user.id}" />'>edit</a>
                                 | <a href='<c:url value="/user/delete/${user.id}" />'>delete</a>
@@ -39,9 +39,7 @@
             </table>
         </c:when>
         <c:otherwise>
-            <jsp:include page="/WEB-INF/jsp/elements/errors.jsp" flush="true">
-                <jsp:param name="errors" value="${msg}" />
-            </jsp:include>
+            <h4>No users</h4>
         </c:otherwise>
     </c:choose>
 <jsp:include page="/WEB-INF/jsp/elements/footer.jsp" />

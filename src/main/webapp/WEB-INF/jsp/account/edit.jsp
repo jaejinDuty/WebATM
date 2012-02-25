@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="/WEB-INF/jsp/elements/header.jsp" flush="true">
-    <jsp:param name="header" value="Edit user" />
+    <jsp:param name="header" value="Edit account" />
 </jsp:include>
 
 <c:if test="${not empty msg}">
@@ -17,25 +17,21 @@
     </jsp:include>
 </c:if>
 
-<c:url var="formAction" value="/user/save" />
-<form:form action="${formAction}" commandName="user" method="post" class="wide">
+<c:url var="formAction" value="/account/save" />
+<form:form action="${formAction}" commandName="account" method="post" class="wide">
     <form:hidden path="id" />
     <fieldset>
         <legend>
             <c:choose>
-                <c:when test="${not empty user.email}">
+                <c:when test="${not empty account.title}">
                     ${user.email}
                 </c:when>
                 <c:otherwise>new user</c:otherwise>
             </c:choose>
         </legend>
         <div class="clearfix req">
-            <label for="email">email:</label>
-            <form:input path="email" name="email" />
-        </div>
-        <div class="clearfix req">
-            <label for="password">password:</label>
-            <form:input path="password" name="password" />
+            <label for="title">title:</label>
+            <form:input path="title" name="title" />
         </div>
         <div class="req fm-submit">
             <input name="submit" type="submit" value="Save" />

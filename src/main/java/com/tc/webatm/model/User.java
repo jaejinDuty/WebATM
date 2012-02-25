@@ -53,7 +53,7 @@ public class User implements java.io.Serializable {
     }
 
     public boolean getIsAdmin() {
-        return email.equals(UserService.ADMIN_EMAIL);
+        return (email != null && email.equals(UserService.ADMIN_EMAIL));
     }
 
     public boolean isAdmin() {

@@ -33,43 +33,41 @@ public class HibernateUserDAODeprecated implements UserDAO {
         return hibernateTemplate;
     }
 
-    @Override
-    public void add(User user) throws ClassNotFoundException, SQLException {
+    public void add(User user) {
         template().save(user);
     }
 
     @Override
-    public void save(User user) throws ClassNotFoundException, SQLException {
+    public void save(User user) {
         template().saveOrUpdate(user);
     }
 
-    @Override
-    public void update(User user) throws ClassNotFoundException, SQLException {
+    public void update(User user) {
         template().update(user);
     }
 
     @Override
-    public Collection getAll() throws ClassNotFoundException, SQLException {
+    public Collection getAll() {
         return template().find("from User order by id");
     }
 
     @Override
-    public void delete(User user) throws ClassNotFoundException, SQLException {
-        template().delete(user);
+    public Collection<User> getAll(String field, String value) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(User.class).add(Restrictions.eq(field, value));
+        return template().findByCriteria(criteria);
     }
 
     @Override
-    public void delete(int id) throws ClassNotFoundException, SQLException {
+    public void delete(int id) {
         template().delete(new User().setId(id));
     }
 
-    @Override
     public void deleteAll() throws ClassNotFoundException, SQLException {
         template().deleteAll(getAll());
     }
 
     @Override
-    public User get(int id) throws ClassNotFoundException, SQLException {
+    public User get(int id) {
         DetachedCriteria criteria = DetachedCriteria.forClass(User.class).add(Restrictions.idEq(id));
         return (User)template().findByCriteria(criteria).toArray()[0];
     }

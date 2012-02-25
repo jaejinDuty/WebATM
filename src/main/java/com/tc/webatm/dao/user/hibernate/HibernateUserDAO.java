@@ -8,8 +8,10 @@ import com.tc.webatm.db.ExecutionMarkers;
 import com.tc.webatm.db.hibernate.SessionProvider;
 import com.tc.webatm.dao.user.UserDAO;
 import com.tc.webatm.model.User;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Expression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -17,17 +19,9 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public class HibernateUserDAO implements UserDAO {
     @Autowired
     private SessionFactory sessionFactory;
-    private HibernateTemplate hibernateTemplate;
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-    }
-
-    private HibernateTemplate template() {
-        if (hibernateTemplate == null) {
-            hibernateTemplate = new HibernateTemplate(sessionFactory);
-        }
-        return hibernateTemplate;
     }
 
     @Override
@@ -42,47 +36,36 @@ public class HibernateUserDAO implements UserDAO {
 
     @Override
     @ExecutionMarkers.FetchMethod
-    public User get(int id) throws ClassNotFoundException, SQLException {
+    public Collection<User> getAll(String field, String value) {
+        Criteria criteria = SessionProvider.SELF.getSession().createCriteria(User.class);
+        criteria.add(Expression.eq(field, value));
+
+        return criteria.list();
+    }
+
+    @Override
+    @ExecutionMarkers.FetchMethod
+    public User get(int id) {
         User user = (User)SessionProvider.SELF.getSession().get(User.class, id);
-        Hibernate.initialize(user);
+        if (user != null) {
+            Hibernate.initialize(user);
+        }
         return user;
     }
 
     @Override
     @ExecutionMarkers.AmendMethod
-    public void add(User user) throws ClassNotFoundException, SQLException {
-        SessionProvider.SELF.getSession().save(user);
-    }
-
-    @Override
-    @ExecutionMarkers.AmendMethod
-    public void save(User user) throws ClassNotFoundException, SQLException {
-        SessionProvider.SELF.getSession().saveOrUpdate(user);
-    }
-
-    @Override
-    @ExecutionMarkers.AmendMethod
-    public void update(User user) throws ClassNotFoundException, SQLException {
-        SessionProvider.SELF.getSession().update(user);
-    }
-
-    @Override
-    @ExecutionMarkers.AmendMethod
-    public void delete(User user) throws ClassNotFoundException, SQLException {
-        SessionProvider.SELF.getSession().delete(user);
-    }
-
-    @Override
-    @ExecutionMarkers.AmendMethod
-    public void delete(int id) throws ClassNotFoundException, SQLException {
-        SessionProvider.SELF.getSession().delete(new User().setId(id));
-    }
-
-    @Override
-    @ExecutionMarkers.AmendMethod
-    public void deleteAll() throws ClassNotFoundException, SQLException {
-        for (User user : getAll()) {
-            SessionProvider.SELF.getSession().delete(user);
+    public void save(User user) {
+        if (user.getId() != 0) {
+            SessionProvider.SELF.getSession().saveOrUpdate(user);
+        } else {
+            SessionProvider.SELF.getSession().save(user);
         }
+    }
+
+    @Override
+    @ExecutionMarkers.AmendMethod
+    public void delete(int id) {
+        SessionProvider.SELF.getSession().delete(new User().setId(id));
     }
 }

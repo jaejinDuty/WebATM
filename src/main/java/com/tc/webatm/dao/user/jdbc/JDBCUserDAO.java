@@ -16,7 +16,7 @@ public class JDBCUserDAO implements UserDAO {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public User get(int id) throws ClassNotFoundException, SQLException {
+    public User get(int id) {
         if (id < 1) {
             throw new IllegalArgumentException("User id must represent positive int");
         }
@@ -26,8 +26,7 @@ public class JDBCUserDAO implements UserDAO {
         return user;
     }
 
-    @Override
-    public void add(@NotNull User user) throws ClassNotFoundException, SQLException {
+    public void add(@NotNull User user) {
         if (user.getId() > 0) {
             jdbcTemplate.update("insert into user(id, email, password) values (?, ?, ?);", new Object[] {user.getId(), user.getEmail(), user.getPassword()});
         } else {
@@ -36,26 +35,24 @@ public class JDBCUserDAO implements UserDAO {
     }
 
     @Override
-    public void save(@NotNull User user) throws ClassNotFoundException, SQLException {
+    public void save(@NotNull User user) {
         if (user.getId() < 1) {
             throw new IllegalArgumentException("User id must represent positive int");
         }
         jdbcTemplate.update("update user set email = ?, password = ? where id = ?;", new Object[] {user.getEmail(), user.getPassword(), user.getId()});
     }
 
-    @Override
-    public void update(@NotNull User user) throws ClassNotFoundException, SQLException {
+    public void update(@NotNull User user) {
         save(user);
     }
 
     @Override
-    public List<User> getAll() throws ClassNotFoundException, SQLException {
+    public List<User> getAll() {
         List<User> users = (List<User>)this.jdbcTemplate.query("select * from user", new UserMapper() );
         return users;
     }
 
-    @Override
-    public void delete(@NotNull User user) throws ClassNotFoundException, SQLException {
+    public void delete(@NotNull User user) {
         if (user.getId() < 1) {
             throw new IllegalArgumentException("User id must represent positive int");
         }
@@ -63,7 +60,7 @@ public class JDBCUserDAO implements UserDAO {
     }
 
     @Override
-    public void delete(int id) throws ClassNotFoundException, SQLException {
+    public void delete(int id) {
         if (id < 1) {
             throw new IllegalArgumentException("User id must represent positive int");
         }
@@ -71,12 +68,17 @@ public class JDBCUserDAO implements UserDAO {
         jdbcTemplate.update("delete from user where id = ?;", new Object[] {id});
     }
 
-    @Override
-    public void deleteAll() throws ClassNotFoundException, SQLException {
+    public void deleteAll() {
         jdbcTemplate.update("delete from user;");
     }
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Override
+    public Collection<User> getAll(String field, String value) {
+        List<User> users = (List<User>)this.jdbcTemplate.query("select * from user where " + field + "=?", new Object[] {value}, new UserMapper() );
+        return users;
     }
 }
